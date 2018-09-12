@@ -19,6 +19,7 @@ if len(sys.argv) == int(config['numExpectedArgs']):
 
 else:
     # Default to the values in config
+    print('Incorrect number of arguments.\nUsing default configuration values.\n')
     serverAddr = config['defaultServerAddr']
     port = int(config['defaultPort'])
     fileName = config['defaultFileName']
