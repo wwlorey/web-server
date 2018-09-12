@@ -54,9 +54,6 @@ while 1:
         tcpCliSock.send('Content-Type: text/html\r\n'.encode())
         tcpCliSock.send('\r\n'.encode())
 
-        # tcpCliSock.send("HTTP/1.0 200 OK\r\n".encode())
-        # tcpCliSock.send("Content-Type:text/html\r\n".encode())
-        # tcpCliSock.send("\r\n".encode())
         tcpCliSock.send((outputdata + '\r\n').encode())
 
         print('Read from cache')
@@ -74,14 +71,9 @@ while 1:
                 # Connect to the socket to port 80
                 c.connect((server_ip, 80))
 
-                # Create a temporary file on this socket and ask port 80 for the file requested by the client
-                # fileobj = c.makefile('r', 0)
-                # fileobj.write("GET " + filename + " HTTP/1.0\n\n")
-
                 get_request = 'GET /' + str(filename) + ' HTTP/1.1\r\n'
                 c.send(get_request.encode())
                 c.send('\r\n'.encode())
-
 
                 # Ensure all messages are received
                 target_time = time.time() + float(config['recvDelay'])
