@@ -5,6 +5,8 @@ import configparser
 import socket
 import sys
 
+from email.utils import formatdate
+
 # Initialize configuration
 config = configparser.ConfigParser()
 config.read('config.cfg')
@@ -19,12 +21,11 @@ serverSocket.bind((config['serverName'], int(config['port'])))
 serverSocket.listen(2)
 
 # Establish the connection
-clientSocket, addr = serverSocket.accept()
 print('Ready to serve...')
+clientSocket, addr = serverSocket.accept()
 
 while True:
     try:
-        # Receive a message from the client
         message = clientSocket.recv(2048).decode()
 
         if message != '\r\n':
@@ -40,28 +41,38 @@ while True:
             with open(filename, 'r') as f:
                 outputdata = f.read()
 
-            # Send the HTTP header into the socket
-            clientSocket.send('HTTP/1.1 200 OK\r\n'.encode())
-            clientSocket.send('Content-Type: text/html\r\n'.encode())
-            clientSocket.send('Connection: keep-alive\r\n'.encode())
-            clientSocket.send(('Content-Length: ' + str(len(outputdata.encode('utf-8'))) + '\r\n').encode())
-            clientSocket.send('\r\n'.encode())
+            # Send HTTP header lines into socket
+            # clientSocket.send(''.encode())
 
+            clientSocket.send('HTTP/1.1 200 OK\r\n'.encode())
+            # clientSocket.send(('Date: ' + formatdate(timeval=None, localtime=False, usegmt=True) + '\r\n').encode())
+            # clientSocket.send('Server: Apache/2.4.18 (Ubuntu)\r\n'.encode())
+            # clientSocket.send('Accept-Ranges: bytes\r\n'.encode())
+            # clientSocket.send(('Content-Length: ' + str(sys.getsizeof(outputdata)) + '\r\n').encode())
+            # clientSocket.send('Keep-Alive: timeout=10, max=100\r\n'.encode())
+            # clientSocket.send('Connection: Keep-Alive\r\n'.encode())
+            # clientSocket.send('Content-Type: text/html; charset=ISO-8859-1\r\n'.encode())
+            # clientSocket.send('Accept-Ranges: bytes\r\n'.encode())
+            # clientSocket.send(('Content-Length: ' + str(sys.getsizeof(outputdata)) + '\r\n').encode())
+            clientSocket.send('Content-Type: text/html\r\n'.encode())
+            # clientSocket.send(('File Data: ' + str(sys.getsizeof(outputdata)) + ' bytes\r\n').encode())
+            clientSocket.send('Connection: keep-alive\r\n'.encode())
+            clientSocket.send('Content-Length: 71\r\n'.encode())
+            clientSocket.send('\r\n'.encode())
             # Send the content of the requested file to the client
             clientSocket.send((outputdata + '\f\r\n').encode())
 
     except IOError:
+        pass
         # Send response message for file not found
         clientSocket.send('HTTP/1.1 404 Not Found\r\n'.encode())
         clientSocket.send('\r\n'.encode())
 
         # Close client socket and break out of the loop
-        print('Could not serve file.')
         print('Closing client socket.')
         clientSocket.close()
         break
 
-# Close the socket and exit the program
 print('Server exiting.')
 serverSocket.close()
 sys.exit()
