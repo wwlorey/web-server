@@ -85,7 +85,6 @@ while 1:
                 # Connect to the socket to port 80
                 c.connect((hostName, 80))
 
-                # get_request = 'GET ' + str(subDomain) + '/' + str(fileName) + ' HTTP/1.1\r\n'
                 get_request = ''
                 get_request +=    'GET ' + str(subDomain) + '/' + str(fileName) + ' HTTP/1.1\r\n'
                 get_request +=    'Host: ' + str(hostName) + '\r\n'
@@ -105,8 +104,6 @@ while 1:
                         while True:
                             try:
                                 buffer += c.recv(2048).decode()
-                                # print('RECEIVED FROM TAYLOR:')
-                                # print(buffer)
                             except:
                                 break
 
