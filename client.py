@@ -11,6 +11,18 @@ config = configparser.ConfigParser()
 config.read('config.cfg')
 config = config['DEFAULT']
 
+# Read command line arguments
+if len(sys.argv) == int(config['numExpectedArgs']):
+    serverAddr = sys.argv[int(config['serverAddrArgIndex'])]
+    port = int(sys.argv[int(config['portArgIndex'])])
+    fileName = sys.argv[int(config['fileNameArgIndex'])]
+else:
+    # Default to the values in config
+    serverAddr = config['defaultServerName']
+    port = int(config['defaultPort'])
+    fileName = config['defaultFileName']
+
+
 exit_client = False
 
 # Create the client socket
@@ -18,7 +30,7 @@ clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 clientSocket.settimeout(float(config['recvDelay']))
 
 # Establish the connection
-clientSocket.connect((config['serverName'], int(config['port'])))
+clientSocket.connect((serverAddr, port))
 
 while True:
     # Get the file name from the user
