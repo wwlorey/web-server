@@ -1,3 +1,7 @@
+#### CS 5600 Networks | A simple web server and proxy server
+
+#### Assignment prompt:
+
 # Programming assignment 1 (pa01)
 
 1. Complete the WebServer.pdf activity, including the two optional activities at the end.
